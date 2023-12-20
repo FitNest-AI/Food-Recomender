@@ -1,23 +1,25 @@
-from flask import Flask, jsonify, request
-from flask_pymongo import PyMongo
-from bson import ObjectId
-import jwt
+import bson
 import os
-from dotenv import load_dotenv
+import jwt
 from datetime import datetime
-import json
-from sklearn.neighbors import NearestNeighbors
 import pandas as pd
+from sklearn.neighbors import NearestNeighbors
+import json
+
 import numpy as np
 
-# Load environment variables from .env
-load_dotenv()
+from flask import Flask, jsonify, request
+from flask_pymongo import PyMongo
+
+from pymongo.errors import DuplicateKeyError, OperationFailure
+from bson.objectid import ObjectId
+# from bson.errors import InvalidId
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = os.getenv("MONGO_URI")
+app.config['MONGO_URI'] = 'mongodb+srv://fitnest:fitnest151123@mycluster.ywz1xtt.mongodb.net/fitnest_db?retryWrites=true&w=majority'
 mongo = PyMongo(app)
 
-secret_key = os.getenv("SECRET_KEY")
+secret_key = 'dd8ef424f64d2f12f965b8e1c039cd301745b58f9a6382f4c2fd4a594db2d5fc0489ce1cd081e2781af9f09b06bff07d4ddc840ababaca31423b88b66df1e60e'
 
 def is_login():
     token = request.headers.get('Authorization')
@@ -39,11 +41,6 @@ def calculate_bmr(profile, age):
     # (10 x berat badan dalam kg) + (6.25 x tinggi badan dalam cm) – (5 x usia dalam tahun) – 161.
     if(profile['gender'] == 'man'):
         return (10 * profile['weight']) + (6.25 * profile['height']) - (5 * age) - 161
-    
-def calculate_carbs(goal, bmr):
-    print(goal)
-
-    return goal
 
 def calculate_calories(profile, bmr):
     level = mongo.db.levels.find_one({'_id': ObjectId(profile['levelId'])})
@@ -151,8 +148,6 @@ def get_food():
     age = calculate_age(profile)
     bmr = calculate_bmr(profile, age)
 
-    print(dietPref['name'])
-
     per_carbs_fat_protein = persentase_carbs_fat_protein(profile)
     calories = calculate_calories(profile, bmr)
     types = 1 if dietPref['name'] != "non vegan" else 0
@@ -195,5 +190,4 @@ def get_food():
     return jsonify(response)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5200))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True, port=5200)
