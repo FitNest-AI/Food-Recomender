@@ -195,4 +195,5 @@ def get_food():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5200)
+    port = int(os.environ.get('PORT', 5200))
+    app.run(host='0.0.0.0', port=port)
