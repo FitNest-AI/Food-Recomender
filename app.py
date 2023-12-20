@@ -16,10 +16,10 @@ from bson.objectid import ObjectId
 # from bson.errors import InvalidId
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = 'mongodb+srv://fitnest:fitnest151123@mycluster.ywz1xtt.mongodb.net/fitnest_db?retryWrites=true&w=majority'
+app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 
-secret_key = 'dd8ef424f64d2f12f965b8e1c039cd301745b58f9a6382f4c2fd4a594db2d5fc0489ce1cd081e2781af9f09b06bff07d4ddc840ababaca31423b88b66df1e60e'
+secret_key = os.getenv('SECRET_KEY')
 
 def is_login():
     token = request.headers.get('Authorization')
@@ -39,7 +39,7 @@ def calculate_bmr(profile, age):
         return (10 * profile['weight']) + (6.25 * profile['height']) - (5 * age) + 5
 
     # (10 x berat badan dalam kg) + (6.25 x tinggi badan dalam cm) – (5 x usia dalam tahun) – 161.
-    if(profile['gender'] == 'man'):
+    if(profile['gender'] == 'woman'):
         return (10 * profile['weight']) + (6.25 * profile['height']) - (5 * age) - 161
 
 def calculate_calories(profile, bmr):
@@ -190,4 +190,4 @@ def get_food():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5200)
+    app.run(debug=True, host='0.0.0.0', port=5200)
