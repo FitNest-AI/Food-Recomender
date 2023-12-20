@@ -1,20 +1,20 @@
-# Use the official lightweight Python image.
-# https://hub.docker.com/_/python
-FROM python:3.9-slim
+# Gunakan base image yang sesuai dengan runtime Anda
+FROM python:3.10.11
 
-# Allow statements and log messages to immediately appear in the Knative logs
-ENV PYTHONUNBUFFERED True
-
-# Copy local code to the container image.
+# Set working directory di dalam container
 WORKDIR /app
-COPY . ./
 
-# Install production dependencies.
-RUN pip install -r requirements.txt
+# Salin file dependencies
+COPY requirements.txt .
 
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
+# Install dependensi
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Salin seluruh konten proyek ke dalam container
+COPY . .
+
+# Port yang harus diexpose sesuai dengan konfigurasi aplikasi Flask Anda
+EXPOSE 5200
+
+# Perintah untuk menjalankan aplikasi menggunakan Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5200", "your_module_name:app"]
