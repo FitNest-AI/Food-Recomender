@@ -3,14 +3,14 @@
 **HTTP Request**
 
 ```
-    GET /?q={{workout_name}}&page={{page}}
+    GET /?q={{food_name}}&page={{page}}
 ```
 
 **Query**
 
 | Parameter | Description                         |
 | :-------- | :---------------------------------- |
-| `q`       | The workout name for deletion.       |
+| `q`       | The food name for search.       |
 | `page`    | The page number for pagination.      |
 
 **Response Body**
@@ -25,7 +25,7 @@
 **Example**
 
 ```
-curl GET "{{base_url}}/?q={{workout_name}}&page={{page}}"
+curl GET "{{base_url}}/?q={{food_name}}&page={{page}}"
 ```
 
 ```JSON
