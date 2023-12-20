@@ -1,20 +1,17 @@
-# Gunakan base image yang sesuai dengan runtime Anda
-FROM python:3.10.11
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
 
-# Set working directory di dalam container
+# Set the working directory to /app
 WORKDIR /app
 
-# Salin file dependencies
-COPY requirements.txt .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install dependensi
-RUN pip install --no-cache-dir -r requirements.txt
+# Install any needed packages specified in requirements.txt
+RUN pip install -r requirements.txt
 
-# Salin seluruh konten proyek ke dalam container
-COPY . .
-
-# Port yang harus diexpose sesuai dengan konfigurasi aplikasi Flask Anda
+# Make port 5200 available to the world outside this container
 EXPOSE 5200
 
-# Perintah untuk menjalankan aplikasi menggunakan Gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:5200", "your_module_name:app"]
+# Specify Gunicorn as the server
+ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:5200", "app:app"]
