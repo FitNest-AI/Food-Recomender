@@ -4,7 +4,7 @@ If you want to run this API Server on your local machine, you need to do these s
 - Second, open the terminal and go to this project's root directory.
 - Third, type `pip install requirement.txt` in your terminal and hit enter button.
 - Fourth, type `flask run` in your terminal and hit enter button.
-- Finally, the server will run on your http://localhost:3000
+- Finally, the server will run on your http://127.0.0.1:5200
 
 ## How to deploy this API to Cloud Run 🚀
 If you want to deploy this API server to Cloud Run, you need to follow this steps:
@@ -14,26 +14,27 @@ If you want to deploy this API server to Cloud Run, you need to follow this step
  ```
 git clone https://github.com/FitNest-AI/Food-Recomender.git
  ```
-- Fourth, add the .env file with Variables to the Food Recomender folder
+
+- Fourth, go to this project's root directory in the Cloud Shell.
+```
+cd Food Recomender
+export PROJECT_ID= <Your GCP project ID>
+```
+- Fifth, add the .env file with Variables to the Workout Recomender folder
 ```
 MONGO_URI: <your MONGO_URI>
 SECRET_KEY: <your SECRET_KEY>
 ```
 
-- Fifth, go to this project's root directory in the Cloud Shell.
-```
-cd fitnest-backend
-export PROJECT_ID= <Your GCP project ID>
-```
 - Sixth, copy the command below to build the image container and upload it to the Container Registry.
  ```
 gcloud builds submit \
-  --tag asia.gcr.io/$PROJECT_ID/Food-Recomender
+  --tag asia.gcr.io/$PROJECT_ID/food-recomender
   ```
 - seventh, copy the command below to deploy your image container to Cloud Run.
  ```
  gcloud run deploy fitnest-backend \
-  --image asia.gcr.io/$PROJECT_ID/Food-Recomender \
+  --image asia.gcr.io/$PROJECT_ID/food-recomender \
   --platform managed \
   --cpu=1 \
   --memory=512Mi \
